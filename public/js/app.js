@@ -75,29 +75,222 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Initial Open Weights Models Arsenal
+  const DEFAULT_MODELS = [
+    {
+      id: 'llama-3.2-3b',
+      name: 'Meta Llama 3.2 3B Instruct',
+      provider: 'Meta Open Weights',
+      type: 'Local CPU / GPU',
+      params: '3.21 Billion',
+      quantization: 'Q4_K_M (2.0 GB)',
+      speed: '~42 tokens/sec',
+      privacy: '100% Air-Gapped',
+      costPerRun: '$0.0000',
+      description: 'Ultra-fast edge inference optimized for mobile/laptop processors. Superior structured JSON extraction.'
+    },
+    {
+      id: 'qwen-2.5-7b',
+      name: 'Qwen 2.5 7B Coder & Finance',
+      provider: 'Alibaba Cloud Open Source',
+      type: 'Local GPU / Metal',
+      params: '7.61 Billion',
+      quantization: 'Q5_K_M (4.8 GB)',
+      speed: '~28 tokens/sec',
+      privacy: '100% Air-Gapped',
+      costPerRun: '$0.0000',
+      description: 'Gold standard for mathematical precision, multi-currency handling, and IRS line item audit.'
+    },
+    {
+      id: 'mistral-nemo-12b',
+      name: 'Mistral NeMo 12B',
+      provider: 'Mistral AI Open Weights',
+      type: 'Local GPU',
+      params: '12.2 Billion',
+      quantization: 'Q4_0 (6.7 GB)',
+      speed: '~19 tokens/sec',
+      privacy: '100% Air-Gapped',
+      costPerRun: '$0.0000',
+      description: 'Trained on 128k context with multi-lingual VAT, EU/UK HMRC receipt and invoice rules.'
+    },
+    {
+      id: 'smolvlm-500m',
+      name: 'SmolVLM 500M Vision-Language',
+      provider: 'Hugging Face Open Source',
+      type: 'Local CPU / Edge',
+      params: '500 Million',
+      quantization: 'INT8 (620 MB)',
+      speed: '~85 tokens/sec',
+      privacy: '100% Air-Gapped',
+      costPerRun: '$0.0000',
+      description: 'Tiny footprint multi-modal model designed specifically for low-power offline receipt vision.'
+    },
+    {
+      id: 'ledgershield-edge',
+      name: 'LedgerShield Local Heuristic Engine',
+      provider: 'LedgerShield Local Core',
+      type: 'In-Memory Native',
+      params: 'Deterministic Hybrid',
+      quantization: 'Zero VRAM Required',
+      speed: '< 25 ms',
+      privacy: '100% Air-Gapped',
+      costPerRun: '$0.0000',
+      description: 'Zero-latency local engine with built-in OCR pattern extraction, Schedule C rule mapping, and audit checks.'
+    }
+  ];
+
+  // Default seed data for immediate air-gapped rendering
+  const DEFAULT_ENTRIES = [
+    {
+      id: 'rec_101',
+      merchant: 'Tech Haven Electronics',
+      date: '2024-10-26',
+      category: 'Equipment & Tech (Section 179)',
+      scheduleCLine: 'Line 13 - Depreciation and section 179 expense',
+      totalAmount: 1189.96,
+      salesTax: 97.00,
+      currency: 'USD',
+      taxDeductiblePercentage: 100,
+      deductibleAmount: 1189.96,
+      taxSavingsEstimated: 356.99,
+      modelUsed: 'Qwen 2.5 7B Coder & Finance',
+      inferenceLatencyMs: 284,
+      status: 'Verified',
+      auditRisk: 'Low',
+      auditNotes: 'High-value equipment deduction. Keep receipt for 3-year Section 179 recordkeeping.',
+      imagePath: './images/receipt_tech.jpg',
+      confidentialNotes: 'Purchased dual monitor & dock for Client NDA project #4489.',
+      lineItems: [
+        { description: 'DELL U2723QE 27" 4K MONITOR', qty: 1, price: 549.99 },
+        { description: 'LOGITECH MX MASTER 3S MOUSE', qty: 1, price: 99.99 },
+        { description: 'APPLE MAGIC KEYBOARD (US)', qty: 1, price: 129.00 },
+        { description: 'OWC THUNDERBIRD DOCK', qty: 1, price: 279.00 },
+        { description: 'HDMI 2.1 CABLE 6FT', qty: 1, price: 19.99 },
+        { description: 'USB-C CHARGING CABLE', qty: 1, price: 14.99 }
+      ]
+    },
+    {
+      id: 'rec_102',
+      merchant: 'Blue Bottle Coffee',
+      date: '2026-03-14',
+      category: 'Business Meals (50% Deductible)',
+      scheduleCLine: 'Line 24b - Deductible meals (50%)',
+      totalAmount: 46.33,
+      salesTax: 3.83,
+      currency: 'USD',
+      taxDeductiblePercentage: 50,
+      deductibleAmount: 23.17,
+      taxSavingsEstimated: 6.95,
+      modelUsed: 'Meta Llama 3.2 3B Instruct',
+      inferenceLatencyMs: 142,
+      status: 'Verified',
+      auditRisk: 'Low',
+      auditNotes: 'Business discussion meal with potential client. Meets 50% IRS deduction rules.',
+      imagePath: './images/receipt_coffee.jpg',
+      confidentialNotes: 'Meeting with prospective design client Sarah K. regarding $12k web app redesign.',
+      lineItems: [
+        { description: 'Artisan Pour-Over (Kenya)', qty: 1, price: 6.75 },
+        { description: 'Avocado Toast', qty: 1, price: 14.50 },
+        { description: 'Client Meeting Combo (Pastry & Granola)', qty: 1, price: 21.25 }
+      ]
+    },
+    {
+      id: 'rec_103',
+      merchant: 'AWS Cloud Services',
+      date: '2026-04-01',
+      category: 'Software & Cloud Infrastructure',
+      scheduleCLine: 'Line 27a - Other Expenses (Cloud & SaaS)',
+      totalAmount: 342.10,
+      salesTax: 0.00,
+      currency: 'USD',
+      taxDeductiblePercentage: 100,
+      deductibleAmount: 342.10,
+      taxSavingsEstimated: 102.63,
+      modelUsed: 'LedgerShield Local Heuristic Engine',
+      inferenceLatencyMs: 18,
+      status: 'Verified',
+      auditRisk: 'Low',
+      auditNotes: 'Routine monthly cloud computing expense directly tied to client software staging.',
+      imagePath: null,
+      confidentialNotes: 'Dedicated EC2 & RDS instances for Client Apex fintech portal.',
+      lineItems: [
+        { description: 'Amazon Elastic Compute Cloud (EC2)', qty: 1, price: 210.50 },
+        { description: 'Amazon Relational Database Service (RDS)', qty: 1, price: 98.40 },
+        { description: 'Amazon Simple Storage Service (S3) & Data Transfer', qty: 1, price: 33.20 }
+      ]
+    },
+    {
+      id: 'rec_104',
+      merchant: 'San Francisco Airport Taxi',
+      date: '2026-04-12',
+      category: 'Travel & Transportation',
+      scheduleCLine: 'Line 24a - Travel (100% Deductible)',
+      totalAmount: 68.50,
+      salesTax: 5.50,
+      currency: 'USD',
+      taxDeductiblePercentage: 100,
+      deductibleAmount: 68.50,
+      taxSavingsEstimated: 20.55,
+      modelUsed: 'SmolVLM 500M Vision-Language',
+      inferenceLatencyMs: 198,
+      status: 'Verified',
+      auditRisk: 'Low',
+      auditNotes: 'Direct airport ground travel to client headquarters on-site workshop.',
+      imagePath: null,
+      confidentialNotes: 'Airport transit to Client Fintech quarterly roadmapping session.',
+      lineItems: [
+        { description: 'Airport Express Cab Transit SFO to Downtown', qty: 1, price: 60.00 },
+        { description: 'Bridge Toll & Airport Surcharge', qty: 1, price: 8.50 }
+      ]
+    }
+  ];
+
+  function computeLocalMetrics(entries) {
+    const totalSpend = entries.reduce((sum, item) => sum + item.totalAmount, 0);
+    const totalDeductible = entries.reduce((sum, item) => sum + item.deductibleAmount, 0);
+    const estimatedTaxSavings = entries.reduce((sum, item) => sum + item.taxSavingsEstimated, 0);
+    return {
+      totalSpend: Number(totalSpend.toFixed(2)),
+      totalDeductible: Number(totalDeductible.toFixed(2)),
+      estimatedTaxSavings: Number(estimatedTaxSavings.toFixed(2)),
+      totalReceipts: entries.length
+    };
+  }
+
+  // Pre-populate state immediately
+  ledgerData = { entries: [...DEFAULT_ENTRIES], metrics: computeLocalMetrics(DEFAULT_ENTRIES) };
+  openModels = [...DEFAULT_MODELS];
+  renderMetrics(ledgerData.metrics);
+  renderTable(ledgerData.entries);
+  renderModelHub(openModels);
+
   // ==========================================
-  // DATA FETCHING
+  // DATA FETCHING (MERGES WITH LIVE SERVER IF RUNNING)
   // ==========================================
   async function fetchLedger() {
     try {
       const res = await fetch('/api/ledger');
-      const data = await res.json();
-      ledgerData = data;
-      renderMetrics(data.metrics);
-      renderTable(data.entries);
+      if (res.ok) {
+        const data = await res.json();
+        ledgerData = data;
+        renderMetrics(data.metrics);
+        renderTable(data.entries);
+      }
     } catch (err) {
-      console.error('Failed to load ledger:', err);
+      console.log('Using local client state for ledger.');
     }
   }
 
   async function fetchModels() {
     try {
       const res = await fetch('/api/models');
-      const data = await res.json();
-      openModels = data.models || [];
-      renderModelHub(openModels);
+      if (res.ok) {
+        const data = await res.json();
+        openModels = data.models || [];
+        renderModelHub(openModels);
+      }
     } catch (err) {
-      console.error('Failed to load models:', err);
+      console.log('Using local open-weight model specs.');
     }
   }
 
